@@ -1,0 +1,50 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+------------------------------------------------------------------------------
+Explanation:
+We initially did partA and partB,C in two different branches.
+Before we handed in, we merged these two branches together. However,
+the problem is that partA passed almost all usertests without problem
+except for 'sbrkarg'. What in xv6-lazy-output.txt is the output that we run 
+the test for partA before merging. However, the problem occured with partB, 
+it would panic if we run usertests for partB. Therefore, if you try to run 
+usertests right now, it will not show the same output as xv6-lazy-output.txt,
+but that is what we actally get without the problem of partB. Besides, there is
+no problem with running 'echo hi' and 'lazyalloc', all tests passed for them.
+------------------------------------------------------------------------------
+
+We made the following changes:
+
+1. Makefile: added $U/_lazytests\
+
+2. kernel/defs.h: defined the newly added functions: vmprint and lazyalloc
+
+3. kernel/exec.c: called vmprint
+
+4. kernal/sysproc.c: eliminated allocation from sbrk
+
+5. kernel/trap.c: made changes to userstrap, let it call lazyalloc to do lazy
+allocation
+
+6. kernel/vm.c: added two functions, vmprint and lazyalloc, made changed to 
+uvmunmap, mappages, uvmcopy
+	
+	- vmprint is the function grabbed from our lab6 to print page table
+
+	- lazyalloc is the function to handle the job of doing lazy allocation
+
+	- mappages: removed the line panic("remap")
+	
+	- uvmnmap: removed the line panic("uvmunmap: walk") and panic("uvmunmap
+	: not mapped")
+
+7. sysproc.c: modified sys_sbrk to delete page allocation and let it handle 
+negative arguments
+
+

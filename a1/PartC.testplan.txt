@@ -1,0 +1,146 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+
+We test all the procedures one by one and used a black box testing strategy:
+
+    LIST *ListCreate()
+
+We test this function in two situations:
+1. create list when there are free lists available
+2. create list when there is no free list available
+
+    int ListAdd(LIST*, void*)
+
+We test this function in five situations:
+- When there are free nodes available
+    1. add a node when the list is empty
+    2. add a node when there is only one node in the list
+    3. add a node to the end of the list
+    4. add a node in the middle of the list
+- When there is no free nodes available
+    5. add a node when there is no free node available (will be tested in
+    the extra test together with other functions which create nodes, We don't
+    want to use up all the free nodes at the beginning)
+
+    int ListCount(LIST*)
+
+We test this function in two situations:
+1. count nodes in an empty list
+2. count nodes in a non-empty list
+
+    void *ListFirst(LIST*)
+
+We test this function in two situations:
+1. operate ListFirst() on a non-empty list
+2. operate ListFirst() on an empty list
+
+    void *ListLast(LIST*)
+
+We test this function in two situations:
+1. operate ListLast() on a non-empty list
+2. operate ListLast() on an empty list
+
+    void *ListNext(LIST*)
+
+We test this function in three situations:
+1. advance the current item without beyond the end of the list
+2. advance the current item beyond the end of the list
+3. operate ListNext() on an empty list
+
+    void *ListPrev(LIST*)
+
+We test this function in three situations:
+1. back up the current item without beyond the start of the list
+2. back up the current item beyond the start of the list
+3. operate ListPrev() on an empty list
+
+    void *ListCurr(LIST*)
+
+We test this function in four situations:
+1. operate ListCurr() when the pointer is at the first node of the list
+2. operate ListCurr() when the pointer is at the last node of the list
+3. operate ListCurr() when the pointer is at the middle of the list
+4. operate ListCurr() on an empty list
+
+    int ListInsert(LIST*, void*)
+
+We test this function in four situations:
+1. insert item in the middle of the list
+2. insert item at the start of the list
+3. insert item to an empty list
+4. insert an item when there is no free node available (will be tested in
+    the extra test together with other functions which create nodes, We don't
+    want to use up all the free nodes at the beginning)
+
+    int ListAppend(LIST*, void*)
+
+We test this function in three situations:
+1. append item to a non-empty list
+2. append item to an empty list
+3. append an item when there is no free node available (will be tested in
+    the extra test together with other functions which create nodes, We don't
+    want to use up all the free nodes at the beginning)
+
+    int ListPrepend(LIST*, void*)
+
+We test this function in three situations:
+1. preppend item to a non-empty list
+2. preppend item to an empty list
+3. preppend an item when there is no free node available (will be tested in
+    the extra test together with other functions which create nodes, We don't
+    want to use up all the free nodes at the beginning)
+
+    void *ListRemove(LIST*)
+
+We test this function in five situations:
+1. delete when there is only one node in the list
+2. delete from an empty list
+3. delete the last node in the list
+4. delete the first node in the list
+5. delete node in the middle of the list
+
+    void ListConcat(LIST*, LIST*)
+
+We test this function in two situations:
+1. both lists are not empty
+2. list1 is empty but list2 is not empty
+
+    void ListFree(LIST*, void(*)(void*))
+
+We test this function in one situations:
+1. free a list 
+
+    void *ListTrim(LIST*)
+
+We test this function in three situations:
+1. operate ListTrim when there are more than one node in the list
+2. operate ListTrim when there is only one node in the list
+3. operate ListTrim on an empty list
+
+    void *ListSearch(LIST*, int (*)(void*, void*), void*)
+
+We test this function in four situations:
+- test with the comparator matchEqual which compare if two integers are equal
+    1. traver from the first node and a matching item should be found
+    2. traverse from the first node and there is no matching item in the list
+- test with the comparator matchGreaterThan which compare if integer1 is greater than integer2
+    3. traver from the first node and a matching item should be found
+    4. traver from the middle of the list and a matching item should not be found
+
+    Extra Tests
+
+I tested the case of creating new node when there is no free node available, 
+for the four procedures:
+
+int ListAdd(LIST*, void*);
+int ListInsert(LIST*, void*);
+int ListAppend(LIST*, void*);
+int ListPrepend(LIST*, void*);
+
+The operations should all return -1

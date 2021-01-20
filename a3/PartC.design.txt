@@ -1,0 +1,26 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+
+The goal is to make xv6 support symbolic links method
+
+1.  Add int symlink(char*, char*) to user.h,
+add entry("symlink") to usys.pl in user level.
+
+2. Define O_NOFOLLOW in fcntl.h,
+this will use in sys_open.
+Define T_SYMLINK type in stat.h
+
+3. Make system call functions in syscall.h
+
+4. Write symlink function in sysfile.c
+- Create new inode for SYMLINK
+- Allocate data block
+- Store target name in data block
+
+5. Modify sys_open handle O_NOFOLLOW case

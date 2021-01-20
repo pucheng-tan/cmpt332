@@ -1,0 +1,447 @@
+diff -r xv6/kernel/defs.h xv6-old/kernel/defs.h
+107,115d106
+< int             nice(int incr); /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< 
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< int             thread_create(void (*tmain)(void *), void *stack, void *arg);
+< void            thread_exit(int) __attribute__((noreturn));
+< int             thread_join(int *exit_code);
+< int             mtx_create(int);
+< int             mtx_lock(int);
+< int             mtx_unlock(int);
+diff -r xv6/kernel/proc.c xv6-old/kernel/proc.c
+17,38d16
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< struct spinlock locks[1024];
+< int currLock = 0;
+< 
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< struct node{
+<   struct proc* p;
+<   struct node* next;
+<   struct node* prev;
+< };
+< 
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< struct queue{
+<   int size;
+<   struct node* first;
+<   struct node* last;
+< };
+< 
+< struct node* temp;
+< 
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< struct queue* Q[20];
+43,44d20
+< int queue_isempty(struct queue* q);
+< struct proc* queue_pop(struct queue* q);
+133d108
+<   p->priority = 0;    /* CMPT 332 GROUP 17 Change, Fall 2020 */
+326,369d300
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< int
+< thread_create(void (*tmain)(void *), void *stack, void *arg)
+< {
+<   int i, pid;
+<   struct proc *np;
+<   struct proc *p = myproc();
+< 
+<   // Allocate process.
+<   if((np = allocproc()) == 0){
+<     return -1;
+<   }
+<   // copy memory from parent to child
+<   np->sz = p->sz;
+<   np->pagetable = p->pagetable;
+<   np->parent = p;
+<   //*(np->trapframe) = *(p->trapframe);
+< 
+<   // assign arguments
+<   np->trapframe->epc = (uint64)tmain;
+<   np->trapframe->sp = (uint64)stack;
+<   np->trapframe->a0 = (uint64)arg;
+<   // fake return
+<   np->trapframe->ra = 0xFFFFFFFF;
+<   // map virtual address
+<   np->v_trapframe = uvmmaptf(np->pagetable, np->trapframe);
+< 
+<   // increment reference counts on open file descriptors.
+<   for(i = 0; i < NOFILE; i++)
+<     if(p->ofile[i])
+<       np->ofile[i] = filedup(p->ofile[i]);
+<   np->cwd = idup(p->cwd);
+< 
+<   safestrcpy(np->name, p->name, sizeof(p->name));
+< 
+<   pid = np->pid;
+< 
+<   np->state = RUNNABLE;
+< 
+<   release(&np->lock);
+< 
+<   return pid;
+< }
+< 
+462,501d392
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< void
+< thread_exit(int status)
+< {
+<   struct proc *p = myproc();
+<   //struct proc *c;
+< 
+<   if(p == initproc)
+<     panic("init exiting");
+< 
+<   // Close all open files.
+<   for(int fd = 0; fd < NOFILE; fd++){
+<     if(p->ofile[fd]){
+<       struct file *f = p->ofile[fd];
+<       fileclose(f);
+<       p->ofile[fd] = 0;
+<     }
+<   }
+< 
+<   begin_op();
+<   iput(p->cwd);
+<   end_op();
+<   p->cwd = 0;
+<   
+<   acquire(&p->parent->lock);
+<   acquire(&p->lock);
+<   wakeup1(p->parent);
+< 
+<   p->xstate = status;
+<   p->state = ZOMBIE;
+<   
+< 
+<   release(&p->parent->lock);
+< 
+<   // Jump into the scheduler, never to return.
+<   sched();
+<   panic("zombie exit");  
+< }
+< 
+< 
+556,605d446
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< int
+< thread_join(int *exit_code)
+< {
+<   struct proc *np;
+<   int havekids;
+<   struct proc *p = myproc();
+< 
+<   // hold p->lock for the whole time to avoid lost
+<   // wakeups from a child's exit().
+<   acquire(&p->lock);
+< 
+<   for(;;){
+<     // Scan through table looking for exited children.
+<     havekids = 0;
+<     for(np = proc; np < &proc[NPROC]; np++){
+<       // this code uses np->parent without holding np->lock.
+<       // acquiring the lock first would cause a deadlock,
+<       // since np might be an ancestor, and we already hold p->lock.
+<       if(np->parent == p){
+<         // np->parent can't change between the check and the acquire()
+<         // because only the parent changes it, and we're the parent.
+<         acquire(&np->lock);
+<         havekids = 1;
+<         if(np->state == ZOMBIE){
+<           // Found one.
+<           //pid = np->pid;
+<           uvmunmaptf(np->pagetable, np->v_trapframe);
+<           np->pagetable = 0;
+<           
+<           freeproc(np);
+<           release(&np->lock);
+<           release(&p->lock);
+<           return *exit_code;
+<         }
+<         release(&np->lock);
+<       }
+<     }
+< 
+<     // No point waiting if we don't have any children.
+<     if(!havekids || p->killed){
+<       release(&p->lock);
+<       return -1;
+<     }
+<     
+<     // Wait for a child to exit.
+<     sleep(p, &p->lock);  //DOC: wait-sleep
+<   }
+< }
+< 
+616d456
+<   /* CMPT 332 GROUP 17 Change, Fall 2020 */
+619,620d458
+< 
+<   int i;
+623,647d460
+< 
+<   for(;;)
+<   {
+<     intr_on();
+< 
+<     for(i=0; i<20; i++) 
+<     {
+<       if(queue_isempty(Q[i]) == 1){
+<         continue;
+<       }
+< 
+<       p = queue_pop(Q[i]);
+<       acquire(&p->lock);
+< 
+<       p->state = RUNNING;
+<       c->proc = p;
+<       swtch(&c->context, &p->context);
+<       c->proc = 0;
+<       
+<       release(&p->lock);
+<     }
+< 
+<   }
+< 
+<   /*
+669d481
+<   */
+875,981d686
+< 
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< int
+< mtx_create(int locked)
+< {
+<   int lockID;
+<   if(currLock >= 1024){
+<     return -1;
+<   }
+<   initlock(&locks[currLock],"lock");
+<   locks[currLock].locked = locked;
+<   lockID = currLock;
+<   currLock++;
+<   return lockID;
+< }
+< 
+< int
+< mtx_lock(int lock_id)
+< { 
+<   //check if lock_id is valid
+<   if (lock_id >= currLock || lock_id < 0)
+< 		return -1;
+<   acquire(&locks[lock_id]);
+<   return 0;
+< }
+< 
+< int
+< mtx_unlock(int lock_id)
+< {
+<   if (lock_id >= currLock || lock_id < 0)
+< 		return -1;
+<   release(&locks[lock_id]);
+<   return 0;
+< }
+< 
+< int
+< nice(int incr)
+< {
+<   struct proc *p = myproc();
+< 
+<   if (p->priority+incr >= 19)
+<     return -1;
+<   
+<   p->priority += incr;
+<   return 0;
+< }
+< 
+< /* Returns the priority of the calling process */
+< int get_priority(int pid) {
+<     struct proc *p;
+<     int priority = -1;
+< 
+<     for(p = proc; p < &proc[NPROC]; p++) 
+<     {
+<         acquire(&p->lock);
+<         if (p->pid != pid) continue;
+<         priority = p->priority;
+<         release(&p->lock);
+<         break;
+<     }
+< 
+<     return priority;
+< }
+< 
+< void queue_push(struct queue* q, struct proc *p)
+< {
+<     struct node* new_node = temp;
+<     new_node->p = p;
+< 
+<     if (q->size == 0){
+<       q->first = new_node;
+<       q->last = new_node;
+<     }
+<     else{
+<       q->last->next = new_node;
+<       new_node->prev = q->last;
+<       q->last = new_node;
+<     }
+< 
+<     q->size++;
+<     
+<     return;
+< }
+< 
+< struct proc* queue_pop(struct queue* q)
+< {
+<     struct node* node_return;
+<     if (q->size == 1){
+<         node_return = q->first;
+<     }
+<     else{
+<         node_return = q->first;
+<         q->first = q->first->next;
+<     }
+<     q->size --;
+< 
+<     return node_return->p;
+< 
+< }
+< 
+< int queue_isempty(struct queue* q)
+< {
+<   if(q->size == 0)
+<     return 1;
+<   else
+<     return 0;
+< }
+\ No newline at end of file
+diff -r xv6/kernel/proc.h xv6-old/kernel/proc.h
+107,108d106
+< 
+<   int priority;         /* CMPT 332 GROUP 17 Change, Fall 2020 */
+diff -r xv6/kernel/syscall.c xv6-old/kernel/syscall.c
+107,114d106
+< extern uint64 sys_nice(void);           /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< extern uint64 sys_thread_create(void);
+< extern uint64 sys_thread_exit(void);
+< extern uint64 sys_thread_join(void);
+< extern uint64 sys_mtx_create(void);
+< extern uint64 sys_mtx_lock(void);
+< extern uint64 sys_mtx_unlock(void);
+138,142d129
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< [SYS_nice]    sys_nice,
+< [SYS_thread_create] sys_thread_create,
+< [SYS_thread_exit]   sys_thread_exit,
+< [SYS_thread_join]   sys_thread_join,
+diff -r xv6/kernel/syscall.h xv6-old/kernel/syscall.h
+23,30d22
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< #define SYS_thread_create   22
+< #define SYS_thread_exit     23
+< #define SYS_thread_join     24
+< #define SYS_mtx_create      26
+< #define SYS_mtx_lock        27
+< #define SYS_mtx_unlock      28
+< #define SYS_nice   23
+diff -r xv6/kernel/sysproc.c xv6-old/kernel/sysproc.c
+98,165d97
+< 
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< uint64
+< sys_nice(void)
+< {
+<   uint64 incr;
+<   argaddr(0,&incr);
+<   return nice(incr);
+< }
+< 
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< uint64
+< sys_thread_create(void)
+< {
+<   uint64 tmain;
+<   uint64 stack;
+<   uint64 arg;
+<   argaddr(0,&tmain);
+<   argaddr(1,&stack);
+<   argaddr(2,&arg);
+<   return thread_create((void*)tmain, (void*)stack, (void*)arg);
+< }
+< 
+< uint64
+< sys_thread_exit(void)
+< {
+<   int n;
+<   if(argint(0, &n) < 0)
+<     return -1;
+<   thread_exit(n);
+<   return 0;  // not reached
+< }
+< 
+< uint64
+< sys_thread_join(void)
+< {
+<   int n;
+<   if(argint(0, &n) < 0)
+<     return -1;
+<   return thread_join(&n);
+< }
+< 
+< uint64
+< sys_mtx_create(void)
+< {
+<   int locked;
+<   if(argint(0, &locked) < 0)
+<     return -1;
+<   return mtx_create(locked);
+< }
+< 
+< uint64
+< sys_mtx_lock(void)
+< {
+<   int lock_id;
+<   if(argint(0, &lock_id) < 0)
+<     return -1;
+<   return mtx_lock(lock_id);
+< }
+< 
+< uint64
+< sys_mtx_unlock(void)
+< {
+<   int lock_id;
+<   if(argint(0, &lock_id) < 0)
+<     return -1;
+<   return mtx_unlock(lock_id);
+< }
+diff -r xv6/Makefile xv6-old/Makefile
+135,136d134
+< 	$U/_testa\
+< 
+Only in xv6: mkfs
+Only in xv6/user: nice.c
+Only in xv6/user: testa.c
+diff -r xv6/user/user.h xv6-old/user/user.h
+26,34d25
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< int thread_create(void (*tmain)(void *), void *stack, void *arg);
+< void thread_exit(int) __attribute__((noreturn));
+< int thread_join(int);
+< int mtx_create(int);
+< int mtx_lock(int);
+< int mtx_unlock(int);
+< int nice(int incr); 
+< 
+diff -r xv6/user/usys.pl xv6-old/user/usys.pl
+39,46d38
+< # /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< entry("thread_create");
+< entry("thread_exit");
+< entry("thread_join");
+< entry("mtx_create");
+< entry("mtx_lock");
+< entry("mtx_unlock");
+< entry("nice"); 

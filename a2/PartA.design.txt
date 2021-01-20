@@ -1,0 +1,42 @@
+/* 
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+*/
+
+
+thread_create():
+It is the close mimic of fork().
+The new thread share the address space with parent.
+So just simply assign pagetable of parent to the new thread.
+Also assign stack pointer, program counter and argument to corresponding registers.
+
+thread_exit():
+Close to exit(). Could not figure out the exact differences.
+
+thread_join():
+Close mimic of wait().
+Instead of returning pid, return the *exitcode.
+
+mtx_create():
+Initialize an integer currlock globaly first.
+Use xv6 built in funciton initlock() to initial a new lock.
+The lockid should be the currlock.
+A lock with lockid of currlock is created, the currlock++, for the next lock id.
+
+mtx_lock():
+Call acquire() use assigned lockid to lock.
+
+mtx_unlock():
+Call release() use assigned lockid to unlock.
+
+
+TEST: Test progrom is in xv6/users/testa.c
+
+First test if thread_create works,
+by creating a simple thread function.
+Test producer-consumer program on mtx related functions(not finished).

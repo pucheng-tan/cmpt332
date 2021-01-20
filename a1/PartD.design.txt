@@ -1,0 +1,32 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+in Makefile, we add _test_numprocs to UPROGS
+
+in syscall.c, we add extern uint64 sys_test_numprocs(void); 
+and we add [SYS_test_numprocs] sys_test_numprocs, in static uint64 (*syscalls[])(void)
+
+in syscall.h, we add #define SYS_test_numprocs 22
+
+in sysproc.c, we add:
+uint64
+sys_test_numprocs(void)
+{
+        return test_numprocs();
+}
+
+in user.h, we add int test_numprocs(void);
+
+in usys.pl, we add entry("test_numprocs");
+
+in defs.h, we add int test_numprocs(void);
+
+in proc.c, we add the function int test_numprocs(void)
+
+in test_numprocs.c, we have the main() function and a function void create_process(void)
+which helps us to create child process

@@ -1,0 +1,24 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+
+We have a function void create_process(void) in test_numprocs.c
+which helps us to create child process.
+
+There is a for loop in the function create_process, in which we
+set how many times the loop repeat to control how many process it
+creates.
+
+We set three tests. For the first test, We let it create 1 process
+and check if the system call gives us the correct output
+
+For the second test, we let it create 5 process and check if the 
+system call gives us the correct output
+
+For the third test, we let it create 10 process and check if the  
+system call gives us the correct output 

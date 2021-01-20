@@ -1,0 +1,119 @@
+put178@tux8:~/332/a1-phase3> group17-testlist
+--------------------ListCreate() test begin--------------------
+ListCreate Test1: Create a list when there is at least one free list available
+test1 passed
+ListCreate Test2: Create a list when there is no free list available
+test2 passed
+--------------------ListAdd() test begin--------------------
+ListAdd Test1: add to an empty list
+test1 passed
+ListAdd Test2: add to a list with one node
+test2 passed
+ListAdd Test3: add to the end
+test3 passed
+ListAdd Test4: add to the middle
+test4 passed
+--------------------ListCount() test begin--------------------
+ListCount Test1: count nodes in an empty list
+test1 passed
+ListCount Test2: count nodes in a non-empty list
+test2 passed
+--------------------ListFirst() test begin--------------------
+ListFirst Test1: operate ListFirst() on a non-empty list
+test1 passed
+ListFirst Test2: operate ListFirst() on an empty list
+test2 passed
+--------------------ListLast() test begin--------------------
+ListLast Test1: operate ListLast() on a non-empty list
+test1 passed
+ListLast Test2: operate ListLast() on an empty list
+test2 passed
+--------------------ListNext() test begin--------------------
+ListNext Test1: advance the current item without beyond the end of the list
+test1 passed
+ListNext Test2: advance the current item beyond the end of the list
+test2 passed
+ListNext Test3: operate ListNext() on an empty list
+test3 passed
+--------------------ListPrev() test begin--------------------
+ListPrev Test1: back up the current item without beyond the start of the list
+test1 passed
+ListPrev Test2: back up the current item beyond the start of the list
+test2 passed
+ListPrev Test3: operate ListPrev() on an empty list
+test3 passed
+--------------------ListCurr() test begin--------------------
+ListCurr Test1: operate ListCurr() when the pointer is at the first node of the list
+test1 passed
+ListCurr Test2: operate ListCurr() when the pointer is at the last node of the list
+test2 passed
+ListCurr Test3: operate ListCurr() when the pointer is at the middle of the list
+test3 passed
+ListCurr Test4: operate ListCurr() on an empty list
+test4 passed
+--------------------ListInsert() test begin--------------------
+ListInsert Test1: insert item in the middle of the list
+test1 passed
+ListInsert Test2: insert item at the start of the list
+test2 passed
+ListInsert Test3: insert item to an empty list
+test3 passed
+--------------------ListAppend() test begin--------------------
+ListAppend Test1: append item to a non-empty list
+test1 passed
+ListAppend Test2: append item to an empty list
+test2 passed
+--------------------ListPrepend() test begin--------------------
+ListPrepend Test1: preppend item to a non-empty list
+test1 passed
+ListPrepend Test2: preppend item to an empty list
+test2 passed
+--------------------ListRemove() test begin--------------------
+ListRemove Test1: delete when there is only one node in the list
+test1 passed
+ListRemove Test2: delete from an empty list
+test2 passed
+ListRemove Test3: delete the last node in the list
+test3 passed
+ListRemove Test4: delete the first node in the list
+test4 passed
+ListRemove Test5: delete node in the middle of the list
+test5 passed
+--------------------ListConcat() test begin--------------------
+ListContat Test1: both lists are not empty
+test1 passed
+ListContat Test2: list1 is empty but list2 is not empty
+test2 passed
+ListContat Test3: list1 is not empty but list2 is empty
+test3 passed
+--------------------ListFree() test begin--------------------
+ListFree Test1: free a list
+test1 passed
+--------------------ListTrim() test begin--------------------
+ListTrim Test1: operate ListTrim when there are more than one node in the list
+test1 passed
+ListTrim Test2: operate ListTrim when there is only one node in the list
+test2 passed
+ListTrim Test3: operate ListTrim on an empty list
+test3 passed
+--------------------ListSearch() test begin--------------------
+ListSearch Test1: Use the comparator matchEqual to find an item
+which is equal to comparisonArg. In this case, traver from the first node
+and a matching item should be found
+test1 passed
+ListSearch Test2: Use the comparator matchEqual to find an item
+which is equal to comparisonArg. In this case, traverse from the first node
+and there is no matching item in the list
+test1 passed
+ListSearch Test3: Use the comparator matchGreaterThan to find an item
+which is greater than comparisonArg. In this case, traver from the first node
+and a matching item should be found
+test3 passed
+ListSearch Test4: Use the comparator matchGreaterThan to find an item
+which is greater than comparisonArg. In this case, traver from the middle of 
+the list and a matching item should not be found
+test4 passed
+--------------------extra test begin--------------------
+Extra Test1: create a node when there is no free node available
+test1 passed
+All test finished.

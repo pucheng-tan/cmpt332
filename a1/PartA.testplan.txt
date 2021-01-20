@@ -1,0 +1,62 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+PartA1:
+
+Implementation of partA1 is completed.
+
+Test for invalid inputs:
+
+    Test if program detects wrong number of argument:
+    ./partA1
+
+    Test if program detects 0:
+    ./partA1 0 0 0
+
+    Test if program detects negative number:
+    ./partA1 -1 1 1
+
+    Test if program detects non-integer number:
+    ./partA1 0.5 1 1
+
+    Test if program detects non-number:
+    ./partA1 t 1 1
+
+Test for valid inputs:
+
+    Test very small arguments:
+    ./partA1 1 1 1
+
+    Test numThreads is large number:
+    ./partA1 60 1 1
+
+    Test deadline is large number:
+    ./partA1 1 600 1
+
+    Test numSquares is large number:
+    ./partA1 1 1 30000
+
+    Test all inputs are large numbers:
+    ./partA1 20 500 20000
+
+    Test numThreads is small number:
+    ./partA1 5 120 10000
+
+    Test deadline is small number:
+    ./partA1 40 5 600
+
+    Test numSquares is small number:
+    ./partA1 40 200 5
+
+    Test with some reasonable inputs:
+    ./partA1 8 8 2000
+
+
+
+PartA2 Same with partA1
+

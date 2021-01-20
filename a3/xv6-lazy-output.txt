@@ -1,0 +1,179 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+------------------------------------------------------------------------------
+Explanation:
+We initially did partA and partB,C in two different branches.
+Before we handed in, we merged these two branches together. However,
+the problem is that partA passed almost all usertests without problem
+except for 'sbrkarg'. Below is the output that we run the test for partA before
+merging. However, the problem occured with partB, it would panic if we run
+usertests for partB. Therefore, if you try to run usertests right now, it 
+will not show the same output as below, but this is what we actally get
+without the problem of partB. Besides, there is no problem with running 
+'echo hi' and 'lazyalloc', all tests passed for them.
+------------------------------------------------------------------------------
+
+xv6 kernel is booting
+
+hart 1 starting
+hart 2 starting
+page table 0x0000000087f6f000
+ ..0: pte 0x0000000021fdac01 pa 0x0000000087f6b000
+ .. ..0: pte 0x0000000021fda801 pa 0x0000000087f6a000
+ .. .. ..0: pte 0x0000000021fdb01f pa 0x0000000087f6c000
+ .. .. ..1: pte 0x0000000021fda40f pa 0x0000000087f69000
+ .. .. ..2: pte 0x0000000021fda01f pa 0x0000000087f68000
+ ..255: pte 0x0000000021fdb801 pa 0x0000000087f6e000
+ .. ..511: pte 0x0000000021fdb401 pa 0x0000000087f6d000
+ .. .. ..510: pte 0x0000000021fddc07 pa 0x0000000087f77000
+ .. .. ..511: pte 0x0000000020001c0b pa 0x0000000080007000
+init: starting sh
+page table 0x0000000087f64000
+ ..0: pte 0x0000000021fd8001 pa 0x0000000087f60000
+ .. ..0: pte 0x0000000021fd7c01 pa 0x0000000087f5f000
+ .. .. ..0: pte 0x0000000021fd841f pa 0x0000000087f61000
+ .. .. ..1: pte 0x0000000021fd781f pa 0x0000000087f5e000
+ .. .. ..2: pte 0x0000000021fd740f pa 0x0000000087f5d000
+ .. .. ..3: pte 0x0000000021fd701f pa 0x0000000087f5c000
+ ..255: pte 0x0000000021fd8c01 pa 0x0000000087f63000
+ .. ..511: pte 0x0000000021fd8801 pa 0x0000000087f62000
+ .. .. ..510: pte 0x0000000021fdc007 pa 0x0000000087f70000
+ .. .. ..511: pte 0x0000000020001c0b pa 0x0000000080007000
+$ echo hi
+page table 0x0000000087f56000
+ ..0: pte 0x0000000021fd4801 pa 0x0000000087f52000
+ .. ..0: pte 0x0000000021fd4401 pa 0x0000000087f51000
+ .. .. ..0: pte 0x0000000021fd4c1f pa 0x0000000087f53000
+ .. .. ..1: pte 0x0000000021fd400f pa 0x0000000087f50000
+ .. .. ..2: pte 0x0000000021fd3c1f pa 0x0000000087f4f000
+ ..255: pte 0x0000000021fd5401 pa 0x0000000087f55000
+ .. ..511: pte 0x0000000021fd5001 pa 0x0000000087f54000
+ .. .. ..510: pte 0x0000000021fd9407 pa 0x0000000087f65000
+ .. .. ..511: pte 0x0000000020001c0b pa 0x0000000080007000
+hi
+$ lazytests
+page table 0x0000000087f74000
+ ..0: pte 0x0000000021fd6801 pa 0x0000000087f5a000
+ .. ..0: pte 0x0000000021fd6c01 pa 0x0000000087f5b000
+ .. .. ..0: pte 0x0000000021fd641f pa 0x0000000087f59000
+ .. .. ..1: pte 0x0000000021fdc80f pa 0x0000000087f72000
+ .. .. ..2: pte 0x0000000021fd9c1f pa 0x0000000087f67000
+ ..255: pte 0x0000000021fdcc01 pa 0x0000000087f73000
+ .. ..511: pte 0x0000000021fd9801 pa 0x0000000087f66000
+ .. .. ..510: pte 0x0000000021fd5807 pa 0x0000000087f56000
+ .. .. ..511: pte 0x0000000020001c0b pa 0x0000000080007000
+lazytests starting
+running test lazy alloc
+test lazy alloc: OK
+running test lazy unmap
+test lazy unmap: OK
+running test out of memory
+test out of memory: OK
+ALL TESTS PASSED
+$ usertests 
+page table 0x00000000871d2000
+ ..0: pte 0x0000000021fd5001 pa 0x0000000087f54000
+ .. ..0: pte 0x0000000021c62801 pa 0x000000008718a000
+ .. .. ..0: pte 0x0000000021c7d81f pa 0x00000000871f6000
+ .. .. ..1: pte 0x0000000021c5e01f pa 0x0000000087178000
+ .. .. ..2: pte 0x0000000021c5981f pa 0x0000000087166000
+ .. .. ..3: pte 0x0000000021d0481f pa 0x0000000087412000
+ .. .. ..4: pte 0x0000000021db401f pa 0x00000000876d0000
+ .. .. ..5: pte 0x0000000021daf81f pa 0x00000000876be000
+ .. .. ..6: pte 0x0000000021cfb81f pa 0x00000000873ee000
+ .. .. ..7: pte 0x0000000021d8041f pa 0x0000000087601000
+ .. .. ..8: pte 0x0000000021cb141f pa 0x00000000872c5000
+ .. .. ..9: pte 0x0000000021d6301f pa 0x000000008758c000
+ .. .. ..10: pte 0x0000000021d9901f pa 0x0000000087664000
+ .. .. ..11: pte 0x0000000021cb801f pa 0x00000000872e0000
+ .. .. ..12: pte 0x0000000021ca181f pa 0x0000000087286000
+ .. .. ..13: pte 0x0000000021d2d01f pa 0x00000000874b4000
+ .. .. ..14: pte 0x0000000021c8681f pa 0x000000008721a000
+ .. .. ..15: pte 0x0000000021d0240f pa 0x0000000087409000
+ .. .. ..16: pte 0x0000000021cd0c1f pa 0x0000000087343000
+ ..255: pte 0x0000000021c6b801 pa 0x00000000871ae000
+ .. ..511: pte 0x0000000021c70001 pa 0x00000000871c0000
+ .. .. ..510: pte 0x0000000021fdd007 pa 0x0000000087f74000
+ .. .. ..511: pte 0x0000000020001c0b pa 0x0000000080007000
+usertests starting
+test manywrites: OK
+test execout: OK
+test copyin: OK
+test copyout: OK
+test copyinstr1: OK
+test copyinstr2: OK
+test copyinstr3: OK
+test rwsbrk: OK
+test truncate1: OK
+test truncate2: OK
+test truncate3: OK
+test reparent2: OK
+test pgbug: OK
+test sbrkbugs: usertrap(): unexpected scause 0x000000000000000c pid=3310
+            sepc=0x0000000000005734 stval=0x0000000000005734
+usertrap(): unexpected scause 0x000000000000000c pid=3311
+            sepc=0x0000000000005734 stval=0x0000000000005734
+OK
+test badarg: OK
+test reparent: OK
+test twochildren: OK
+test forkfork: OK
+test forkforkfork: OK
+test argptest: OK
+test createdelete: OK
+test linkunlink: OK
+test linktest: OK
+test unlinkread: OK
+test concreate: OK
+test subdir: OK
+test fourfiles: OK
+test sharedfd: OK
+test dirtest: OK
+test exectest: page table 0x0000000086f00000
+ ..0: pte 0x0000000021bbb401 pa 0x0000000086eed000
+ .. ..0: pte 0x0000000021bbf801 pa 0x0000000086efe000
+ .. .. ..0: pte 0x0000000021bba01f pa 0x0000000086ee8000
+ .. .. ..1: pte 0x0000000021bbf40f pa 0x0000000086efd000
+ .. .. ..2: pte 0x0000000021bbec1f pa 0x0000000086efb000
+ ..255: pte 0x0000000021bb9801 pa 0x0000000086ee6000
+ .. ..511: pte 0x0000000021bbac01 pa 0x0000000086eeb000
+ .. .. ..510: pte 0x00000000206c7c07 pa 0x0000000081b1f000
+ .. .. ..511: pte 0x0000000020001c0b pa 0x0000000080007000
+OK
+test bigargtest: OK
+test bigwrite: OK
+test bsstest: OK
+test sbrkbasic: OK
+test sbrkmuch: OK
+test kernmem: OK
+test sbrkfail: OK
+test sbrkarg: sbrkarg: write sbrk failed
+FAILED
+test validatetest: OK
+test stacktest: OK
+test opentest: OK
+test writetest: OK
+test writebig: OK
+test createtest: OK
+test openiput: OK
+test exitiput: OK
+test iput: OK
+test mem: OK
+test pipe1: OK
+test killstatus: OK
+test preempt: kill... wait... OK
+test exitwait: OK
+test rmdot: OK
+test fourteen: OK
+test bigfile: OK
+test dirfile: OK
+test iref: OK
+test forktest: OK
+test bigdir: OK
+SOME TESTS FAILED

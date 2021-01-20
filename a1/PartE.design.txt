@@ -1,0 +1,46 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+
+Global variables
+
+*input: save input from stdin.
+*pwd: struct for getpwuid() function.
+
+Fuctions:
+
+main():
+    call shell().
+
+shell():
+    Malloc space for *input and paraArr( array stores parameter tokens)
+    While true keep calling prompt(), readCommand().
+    If there is no command (just enter), keep asking using for command.
+    If the command is 'cd' or 'quit', call builtIn().
+    Else fork() a child thread, and call execute() in child thread.
+    Not able to handle pipeline.
+
+prompt():
+    Prompts pwd, using getcwd().
+
+readCommand():
+    Read command line, tokenize inputs and store them paraArr.
+
+builtIn():
+    If *command is 'quit' or 'exit', exit the program.
+    If *command is cd, using parameter in paraArr[1] to cd the directory.
+    Handle both absolute and relative path.
+
+execute():
+    Hard coded store linux command locations in array.
+    Try call command in all the locations in for loop.
+    Once the command is executed, the loop ends.
+
+
+
+

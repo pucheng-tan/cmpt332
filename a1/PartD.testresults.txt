@@ -1,0 +1,21 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+test1:
+
+xv6 kernel is booting
+
+hart 2 starting
+hart 1 starting
+init: starting sh
+$ test_numprocs
+fork test
+CURRENT NUMBER OF RUNNABLE RPOCESSES: 1
+
+
+

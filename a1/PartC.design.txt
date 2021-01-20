@@ -1,0 +1,285 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+------------------------------Purpose------------------------------
+The objective of this project is to develop a C library which allows user to 
+create several generic lists where each list has a homogenous data type.
+
+Files contained:
+
+list.h
+list_adders.c
+list_movers.c
+list_removers.c
+group17_testlist.c
+
+------------------------------Description------------------------------
+1. MEMORY ALLOCATION
+
+We dynamically allocate two memory blocks when the first execution happens: 
+one for Lists and one for Nodes.
+
+To solve the problem that there is no ListInit() function, we have to find a 
+way to know when the first execution happens. We set a static variable called 
+TRIGGER in the function ListCreate(). The initail value of TRIGGER is 
+set to be 0. A IF statement is used to check if it is the first execution. The 
+logic is that if TRIIGER equals 0, then it is the first execution. If TRIGGER 
+equals 1, then it is not the first execution. When the first time the 
+ListCreate() function is called, the if statement gives the outcome TRUE, 
+then memory blocks will be allocated and TRIGGER will be 
+updated to 1.
+
+2. IMPORTANT VALUES
+
+#define TOTAL_LISTS 5
+#define TOTAL_NODES 15
+
+These two limits are set in list_adders.c. We set the maximum number of lists to be 
+5 and the maximum number of nodes to be 15. We set these two limits to be super samll, 
+because it is easy to test the library. However, these two limits could be changed anytime 
+as you want.
+
+
+3. TRACKING THE FREE LISTS AND FREE NODES
+
+We set a stack for free lists and a stack for free nodes. In the LIST structure, 
+there is a component next_free_list which is a pointer point to the next free list.
+In the NODE structure, there is a component next_free_node which is a pointer point 
+to the next free node.
+
+We also set the following global variables to track the free lists and free nodes
+at the top of the stack. We also set external linkage for these variables so that 
+they are visible to other source files.
+
+LIST* curr_free_list
+- Track the current free list whcih is at the top of the stack. When a new list 
+needs to be created, we pop the current free list and make the next free list 
+to be the new current free list. When a list is freed, it will be pushed into the
+stack and set to be the new current free list.
+
+NODE* curr_free_node;
+- Track the current free node whcih is at the top of the stack. When a new node 
+needs to be created, we pop the current free node and make the next free node 
+to be the new current free node. When a node is freed, it will be pushed into the
+stack and set to be the new current free node.
+
+------------------------------Structures------------------------------
+typedef struct NODE
+{
+    void* data;                         // a pointer to the item contained in the node
+    struct NODE* next;                  // a pointer to the next node in the list
+    struct NODE* prev;                  // a pointer to the previous node in the list
+    struct NODE* next_free_node;        // a pointer to the next free node when the node is free, 
+                                        // setted to be NULL when the node is in use
+} NODE;
+
+typedef struct LIST
+{
+    int size;                           // the number of nodes in the list
+    NODE* first;                        // a pointer to the first node in the list
+    NODE* curr;                         // a pointer to the current node in the list
+    NODE* last;                         // a pointer to the last node in the list
+    struct LIST* next_free_list;        // a pointer to the next free list when the list is free, 
+                                        // setted to be NULL when the list is in use
+} LIST;
+
+------------------------------Procedures------------------------------
+in list_adders.c:
+
+
+1. LIST *ListCreate()
+Purpose:
+    makes a new, empty list, and returns its reference on success. initialize memory blocks if it is
+    the first execution
+In:
+    NONE
+Out:
+    a pointer to a structure of type LIST - if success
+    NULL - if failure
+
+pseudocode:
+///////////////////////////////////////////////////////////////////////////////////////////////////// 
+if (This is the first execution){
+    allocate memory block for lists
+    initialize the next_free_list component of each list structure to the next list in the stack 
+    except the last one
+    initialize the next_free_list component of last list structure to NULL
+    set curr_free_list to the first list in the stack
+
+    allocate memory block for nodes
+    initialize the next_free_node component of each node structure to the next node in the stack 
+    except the last one
+    initialize the next_free_node component of last node structure to NULL
+    set curr_free_node to the first node in the stack
+}
+if (There is no free lists available){
+    return NULL
+}
+pop a new list from the stack of free Lists
+initialize the new list
+return the new list
+/////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+2. int ListAdd(LIST* list, void* item)
+Purpose:   
+    adds the new item to list directly after the current item, and makes item the current item. 
+    If the current pointer is at the end of the list, the item is added at the end.
+In:
+    list - a pointer to a list structure
+    item - a pointer to an item
+Out:
+    0 - if success
+    -1 - if failure
+
+3. int ListInsert(LIST* list, void* item)
+Purpose:
+    adds item to list directly before the current item, and makes the new item the current one. 
+    If the current pointer is at the start of the list, the item is added at the start. 
+In:
+    list - a pointer to a list structure
+    item - a pointer to an item
+Out:
+    0 - if success
+    -1 - if failure
+
+4. int ListAppend(LIST* list, void* item)
+Purpose:
+    adds item to the end of list, and makes the new item the current one.
+In:
+    list - a pointer to a list structure
+    item - a pointer to an item
+Out:
+    0 - if success
+    -1 - if failure
+
+5. int ListPrepend(LIST* list, void* item)
+Purpose:
+    adds item to the front of list, and makes the new item the current one.
+In:
+    list - a pointer to a list structure
+    item - a pointer to an item
+Out:
+    0 - if success
+    -1 - if failure
+
+
+in list_movers.c:
+
+
+6. int ListCount(LIST* list)
+Purpose:
+    returns the number of items in list.
+In:
+    list - a pointer to a list structure
+Out:
+    an integer
+
+7. void *ListFirst(LIST* list)
+Purpose:
+    returns a pointer to the first item in list and makes the first item the current item.
+In:
+    list - a pointer to a list structure
+Out:
+    a pointer to an item
+    NULL - if the list is empty
+
+8. void *ListLast(LIST* list)
+Purpose:
+    returns a pointer to the last item in list and makes the last item the current one.
+In:
+    list - a pointer to a list structure
+Out:
+    a pointer to an item
+    NULL - if the list is empty
+
+9. void *ListNext(LIST* list)
+Purpose:
+    advances the list's current node by one, and returns a pointer to the new current item. 
+    If this operation attempts to advances the current item beyond the end of the list, 
+    a NULL pointer is returned.
+In:
+    list - a pointer to a list structure
+Out:
+    a pointer to an item
+    NULL - if failure to advance the current item
+
+10. void *ListPrev(LIST* list)
+Purpose:
+    backs up the list's current node by one, and returns a pointer to the new current item. 
+    If this operation attempts to back up the current item beyond the start of the list, 
+    a NULL pointer is returned.
+In:
+    list - a pointer to a list structure
+Out:
+    a pointer to an item
+    NULL - if failure to back up the current item
+
+11. void *ListCurr(LIST* list)
+Purpose:
+    returns a pointer to the current item in list.
+In:
+    list - a pointer to a list structure
+Out:
+    a pointer to an item
+    NULL - if the list is empty
+
+
+in list_removers.c
+
+
+12. void *ListRemove(LIST* list)
+Purpose:
+    Return current item and take it out of list. Make the next item the current one.
+In:
+    list - a pointer to a list structure
+Out:
+    a pointer to an item
+    NULL - if the list is empty
+
+13. void ListConcat(LIST* list1, LIST* list2)
+Purpose:
+    adds list2 to the end of list1. The current pointer is set to the current pointer of list1. 
+    List2 no longer exists after the operation.
+In:
+    list1 - a pointer to a list structure
+    list2 - a pointer to a list structure
+Out:
+    NONE
+
+14. void ListFree(LIST* list, void (*itemFree)(void *itemToBeFreed))
+Purpose:
+    delete list. itemFree is a pointer to a routine that frees an item. 
+In:
+    list - a pointer to a list structure
+    itemFree - a pointer to a function which frees item
+Out:
+    NONE
+
+15. void *ListTrim(LIST* list)
+Purpose:
+    Return last item and take it out of list. The current pointer shall be the new last item in the list.
+In:
+    list - a pointer to a list structure
+Out:
+    a pointer to an item
+    NULL - if the list is empty
+
+16. void *ListSearch(LIST* list, int (*comparator)(void* item1, void* item2), void* comparisonArg)
+Purpose:
+    searches list starting at the current item until the end is reached or a match is found. 
+    In this context, a match is determined by the comparator parameter. 
+    If a match is found, the current pointer is left at the matched item and 
+    the pointer to that item is returned. If no match is found, the current pointer is left at the end of 
+    the list and a NULL pointer is returned.
+In:
+    list - a pointer to a list structure
+    comparator - a pointer to a function which compares two items
+    comparisonArg - a pointer to an item
+Out:
+    a pointer to an item
+    NULL - if no match is found

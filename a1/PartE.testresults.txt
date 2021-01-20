@@ -1,0 +1,34 @@
+
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+rug276@tux7:~/CMPT332/group17/a1-phase3> ./partE
+/student/rug276/CMPT332/group17/a1-phase3> 
+/student/rug276/CMPT332/group17/a1-phase3> 
+/student/rug276/CMPT332/group17/a1-phase3> cd test
+/student/rug276/CMPT332/group17/a1-phase3/test> cd ..
+/student/rug276/CMPT332/group17/a1-phase3> cd ~
+/student/rug276> cd ~/CMPT332
+/student/rug276/CMPT332> cd group17
+/student/rug276/CMPT332/group17> ls
+a1-phase3  group-info.txt  README.md  xv6  xv6-riscv
+/student/rug276/CMPT332/group17> touch test
+/student/rug276/CMPT332/group17> ls
+a1-phase3  group-info.txt  README.md  test  xv6  xv6-riscv
+/student/rug276/CMPT332/group17> rm test
+/student/rug276/CMPT332/group17> ls
+a1-phase3  group-info.txt  README.md  xv6  xv6-riscv
+/student/rug276/CMPT332/group17> asdfg
+asdfg: command not found
+error: No such file or directory
+/student/rug276/CMPT332/group17> cd a1-phase3
+/student/rug276/CMPT332/group17/a1-phase3> make clean
+rm -rf *.o *.a partA1 partA2 group17-testlist
+/student/rug276/CMPT332/group17/a1-phase3> quit
+Shell exits.
+rug276@tux7:~/CMPT332/group17/a1-phase3> 

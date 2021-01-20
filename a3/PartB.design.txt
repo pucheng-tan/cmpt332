@@ -1,0 +1,48 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+
+The goal is to change related files in xv6, 
+to make it support doubly indirect block.
+So the longest file is more than 12+256 blocks.
+
+1. Modify kernel/param.h to change FSSIZE to 200,000,
+and then rebuild mkfs.
+
+2. Xv6 originally support 12 direct blocks and 1 singly-indirect block.
+To make a space for the new doubly-indirect block,
+change 12 direct blocks to 11 blocks, make the 12th block singly-indirect block,
+and add a doubly-indirect block at the end.
+So the total blocks should be 11 + 256 + 256 x 256 = 65803
+
+3. So modify fs.h:
+NDIRECT 12 to NDIRECT 11
+addrs[NDIRECT+1] to addrs[NDIRECT+2]
+MAXFILE (NDIRECT + NINDIRECT) to 
+MAXFILE (NDIRECT + NINDIRECT + NINDIRECT * NINDIRECT)
+
+4. Modify bmap() as required
+allocate first indirect block
+and then allocate double indirect block
+
+ip->addrs[NDIRECT + 1] = addr = balloc(ip->dev);
+
+bp = bread(ip->dev, addr);
+indirect = (uint *)bp->data;
+indirectIdx = bn / NINDIRECT;
+
+addr = indirect[indirectIdx] = balloc(ip->dev);
+
+bp2 = bread(ip->dev, addr);
+doubleIndirect = (uint *)bp2->data;
+doubleIndirectIdx = bn % NINDIRECT;
+
+addr = doubleIndirect[doubleIndirectIdx] = balloc(ip->dev);
+
+5. Modify itrunc(), allow it free doubly indirect block
+Use nested loop to free doubly-indirect block

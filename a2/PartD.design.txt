@@ -1,0 +1,76 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+We will implement a simple chat program,
+which allows two users communicate from different machines.
+There should be 4 thread functions along with other helper functions.
+We will use Semaphores for threads coordination.
+And we will need the list data structure we built in assignment1.
+
+Global variables:
+    - sendList: store messages needs to be translated
+    - printList: store messages needs to be printed
+    - sendMutex - init 0
+    - printMutex - init 0
+
+1. readKeyboard()
+Read input from keyboard and send message to sendList.
+
+Procedures:
+while true
+
+    read from keyboard
+    queue the msg to sendList
+
+    V(sendMutex)
+
+2. sendUDP()
+Read message from sendList, translate the text message to UDP datagram.
+Send the UDP to the receiver's port throught network.
+
+Procedures:
+while true
+    P(sendMutex)
+
+    dequeue msg from sendList
+    translate msg to UDP
+    send UDP to network
+
+3. receiveUDP()
+Receive UDP datagram from network, validate the data and translate into text.
+Send the text to printList.
+
+Procedures:
+while true
+    receive UDP from network
+    translate UDP to text msg
+    queue msg to printList
+
+    V(printMutex)
+
+4. printScreen
+Receive text message from printList.
+Print it to the shell standard out.
+
+Procedures:
+while true
+    P(printMutex)
+
+    dequeue msg from printList
+    print it the standard out
+
+From what we understand now,
+the read and print should not work in the same time.
+So we use a semaphore to control these two CSs.
+For sendMutex and printMutex is to give the sender and printer signal,
+so that they know there are things ready to be sent / printed.
+They don't have to be busy checking.
+
+
+
+

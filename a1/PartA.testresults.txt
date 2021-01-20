@@ -1,0 +1,155 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+
+partA1:
+
+./partA1
+Usage: ./partA1 numThreads deadline numSquares
+
+./partA1 1
+Usage: ./partA1 numThreads deadline numSquares
+
+./partA1 0 0 0
+The arguments must be positive integers, please enter valid inputs.
+
+./partA1 -1 1 1
+The arguments must be positive integers, please enter valid inputs.
+
+./partA1 0.5 1 1
+The arguments must be positive integers, please enter valid inputs.
+
+./partA1 t 1 1
+The arguments must be positive integers, please enter valid inputs.
+
+./partA1 1 1 1
+0 of child threads were incompleted.
+
+./partA1 60 1 1
+0 of child threads were incompleted.
+
+./partA1 1 600 1
+0 of child threads were incompleted.
+
+./partA1 1 1 30000
+Child failed to complete computation, made 597026 recursive calls using 0.010303s.
+1 of child threads were incompleted.
+
+./partA1 20 500 20000
+Child failed to complete computation, made 36512784 recursive calls using 4.932478s.
+Child failed to complete computation, made 34523964 recursive calls using 4.918544s.
+Child failed to complete computation, made 35853282 recursive calls using 4.918500s.
+Child failed to complete computation, made 29579585 recursive calls using 4.868594s.
+Child failed to complete computation, made 28269678 recursive calls using 3.699230s.
+Child failed to complete computation, made 28823343 recursive calls using 3.699199s.
+Child failed to complete computation, made 28347142 recursive calls using 3.695067s.
+Child failed to complete computation, made 28429569 recursive calls using 3.693050s.
+Child failed to complete computation, made 27162273 recursive calls using 3.692044s.
+Child failed to complete computation, made 28567988 recursive calls using 3.691984s.
+Child failed to complete computation, made 28414490 recursive calls using 3.690781s.
+Child failed to complete computation, made 28676092 recursive calls using 3.691765s.
+Child failed to complete computation, made 28868600 recursive calls using 3.692803s.
+Child failed to complete computation, made 28891400 recursive calls using 3.690963s.
+Child failed to complete computation, made 28603265 recursive calls using 3.689105s.
+Child failed to complete computation, made 28098755 recursive calls using 3.686123s.
+Child failed to complete computation, made 27826568 recursive calls using 3.686049s.
+Child failed to complete computation, made 28370016 recursive calls using 3.686048s.
+Child failed to complete computation, made 28369277 recursive calls using 3.685892s.
+Child failed to complete computation, made 29571894 recursive calls using 3.695697s.
+20 of child threads were incompleted.
+
+./partA1 5 120 10000
+Child failed to complete computation, made 27529709 recursive calls using 0.980006s.
+Child failed to complete computation, made 28444652 recursive calls using 0.975766s.
+Child failed to complete computation, made 28406952 recursive calls using 0.975769s.
+Child failed to complete computation, made 28469507 recursive calls using 0.975739s.
+Child failed to complete computation, made 28336066 recursive calls using 0.962791s.
+5 of child threads were incompleted.
+
+
+./partA1 40 5 600
+Child failed to complete computation, made 77920 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+12 of child threads were incompleted.
+
+./partA1 40 200 5
+0 of child threads were incompleted.
+
+
+./partA1 8 8 2000
+Child failed to complete computation, made 1189652 recursive calls using 0.009978s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+Child failed to complete computation, made 0 recursive calls using 0.000000s.
+4 of child threads were incompleted.
+
+
+
+
+
+
+partA2
+
+./partA2
+Usage: ./partA2 numThreads deadline numSquares
+
+./partA2 1
+Usage: ./partA2 numThreads deadline numSquares
+
+./partA2 0 0 0
+The arguments must be positive integers, please enter valid inputs.
+
+./partA2 -1 1 1
+The arguments must be positive integers, please enter valid inputs.
+
+./partA2 0.5 1 1
+The arguments must be positive integers, please enter valid inputs.
+
+./partA2 t 1 1
+The arguments must be positive integers, please enter valid inputs.
+
+./partA2 1 1 1
+0 of child threads were incompleted.
+
+./partA2 60 1 1
+Segmentation fault (core dumped)
+# partA2 failed to create more than 3 child threads.
+
+./partA2 1 6 1
+0 of child threads were incompleted.
+
+./partA2 1 1 30000
+Child failed to complete computation, made 108462289 recursive calls using 0.997901s.
+1 of child threads were incompleted.
+
+./partA2 2 2 20000
+Child failed to complete computation, made 83876391 recursive calls using 3.990123s.
+Child failed to complete computation, made 0 recursive calls using 3.989703s.
+2 of child threads were incompleted.
+
+./partA2 20 5 20000
+Segmentation fault (core dumped)
+# partA2 failed to create more than 3 child threads.
+
+PartA2 failed to create more than 3 child threads,
+so the rest of the tests all have segmentation fault.
+It looks like Posix thread is creating thread in sequence,
+unlike UBCpthread which is asynchronous.
+The parent wakes up before all the children created which causes segmentation fault.
+It might be solved by giving parent and child threads different priority.
+

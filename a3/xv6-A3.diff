@@ -1,0 +1,327 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+diff -r xv6/kernel/defs.h xv6-old/kernel/defs.h
+176,177d175
+< void            vmprint(pagetable_t pagetable);
+< int             lazyalloc(pagetable_t, uint64, uint64);
+diff -r xv6/kernel/exec.c xv6-old/kernel/exec.c
+119,121d118
+<   /* CMPT 332 group 17 change */
+<   vmprint(p->pagetable);
+< 
+diff -r xv6/kernel/fcntl.h xv6-old/kernel/fcntl.h
+6,7d5
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< #define O_NOFOLLOW  0x400
+diff -r xv6/kernel/fs.c xv6-old/kernel/fs.c
+379c379
+< {  
+---
+> {
+382,383d381
+<   /* CMPT 332 GROUP 17 Change, Fall 2020 */
+<   struct buf *bp2;
+405,432d402
+<   
+<   /* CMPT 332 GROUP 17 Change, Fall 2020 */
+<   bn -= NINDIRECT;
+<     if (bn < NINDIRECT * NINDIRECT) {
+<       // Load first indirect block, allocating if necessary.
+<       if ((addr = ip->addrs[NDIRECT + 1]) == 0) {
+<           ip->addrs[NDIRECT + 1] = addr = balloc(ip->dev);
+<       }
+<       bp = bread(ip->dev, addr);
+<       a = (uint *)bp->data;
+<         
+<       if ((addr = a[bn / NINDIRECT]) == 0) {
+<           addr = a[bn / NINDIRECT] = balloc(ip->dev);
+<           log_write(bp);
+<       }
+<         
+<       bp2 = bread(ip->dev, addr);
+<       a = (uint *)bp2->data;
+<         
+<       if ((addr = a[bn % NINDIRECT]) == 0) {
+<           addr = a[bn % NINDIRECT] = balloc(ip->dev);
+<           log_write(bp2);
+<       }        
+<         
+<       brelse(bp);
+<       brelse(bp2);
+<       return addr;
+<     }
+444d413
+<   struct buf *bp2;
+446,447d414
+<   uint *temp;
+<   
+467,490d433
+<   
+<   /*CMPT 332 GROUP 17 Change, Fall 2020 */
+<   if(ip->addrs[NDIRECT+1]){
+<     bp = bread(ip->dev, ip->addrs[NDIRECT+1]);
+<     a = (uint*)bp->data;
+<     for(i = 0; i < NINDIRECT; i++){
+<       if(a[i]){
+<         bp2 = bread(ip->dev, ip->addrs[NINDIRECT]);
+<         temp = (uint*)bp->data;
+<         for(j = 0; j< NINDIRECT; j++){
+<           if(temp[j]){
+<             bfree(ip->dev,temp[j]);
+<           }
+<         }
+<         brelse(bp2);
+<         bfree(ip->dev, a[i]);
+<       }
+<     }
+<     brelse(bp);
+<     bfree(ip->dev, ip->addrs[NDIRECT+1]);
+<     ip->addrs[NDIRECT+1] = 0;
+<     }
+<      
+<     
+diff -r xv6/kernel/fs.h xv6-old/kernel/fs.h
+27,28c27
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< #define NDIRECT 11
+---
+> #define NDIRECT 12
+30c29
+< #define MAXFILE (NDIRECT + NINDIRECT + NINDIRECT * NINDIRECT)
+---
+> #define MAXFILE (NDIRECT + NINDIRECT)
+39,40c38
+<   /* CMPT 332 GROUP 17 Change, Fall 2020 */
+<   uint addrs[NDIRECT+2];   // Data block addresses
+---
+>   uint addrs[NDIRECT+1];   // Data block addresses
+diff -r xv6/kernel/param.h xv6-old/kernel/param.h
+1,3c1,2
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< #define NPROC        10  // maximum number of processes
+< #define NCPU          1  // maximum number of CPUs
+---
+> #define NPROC        64  // maximum number of processes
+> #define NCPU          8  // maximum number of CPUs
+13,14c12
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< #define FSSIZE       200000  // size of file system in blocks
+---
+> #define FSSIZE       1000  // size of file system in blocks
+diff -r xv6/kernel/stat.h xv6-old/kernel/stat.h
+4,5d3
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< #define T_SYMLINK 4  
+diff -r xv6/kernel/syscall.c xv6-old/kernel/syscall.c
+107,108d106
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< extern uint64 sys_symlink(void);
+132,133d129
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< [SYS_symlink] sys_symlink,
+diff -r xv6/kernel/syscall.h xv6-old/kernel/syscall.h
+23,24d22
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< #define SYS_symlink   22
+diff -r xv6/kernel/sysfile.c xv6-old/kernel/sysfile.c
+306,323c306
+<   } else if(omode & O_NOFOLLOW){
+<     if((ip = namei(path)) == 0){
+<       end_op();
+<       return -1;
+<     }
+<     ilock(ip);
+<     if (ip->type == T_SYMLINK)
+<     {
+<       char data[1024];
+<       readi(ip, 0, (uint64)&data, 0, 1024);
+<       ip = namei(data);
+<       if (ip == 0)
+<       {
+<         printf("File doesn't exist\n");
+<         return -1;
+<       }
+<     }
+<   }else {
+---
+>   } else {
+502,541d484
+<   return 0;
+< }
+< 
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< uint64
+< symlink(char* target,char * path)
+< {
+<   begin_op();
+<   if ((namei(path)) != 0)
+<   {
+<     end_op();
+<     return -1;
+<   }
+<   /* create a new inode for SYMLINK */
+<   struct inode *ip = create(path, T_SYMLINK, 0, 0);
+<   /* allocate data block */
+<   char *data = target;
+<   /* store target name */
+<   writei(ip, 0, (uint64)&data, 0, strlen(data) + 1);
+< 
+<   iunlockput(ip);
+< 
+<   char newdata[1024];
+<   readi(ip, 0, (uint64)&newdata, 0, 1024);
+< 
+<   end_op();
+<   return 0;
+< } 
+< 
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< uint64
+< sys_symlink(void)
+< {
+<   char path[1024];
+<   char target[1024];
+< 
+<   if((argstr(0, target, MAXPATH)) < 0 ||(argstr(1, path, MAXPATH)) < 0){
+<     return -1;
+<   }
+<   symlink((char*)target, (char*)path);
+diff -r xv6/kernel/sysproc.c xv6-old/kernel/sysproc.c
+50,59c50,51
+<   /* CMPT 332 group 17 change */
+<   //if(growproc(n) < 0)
+<   //  return -1;
+<   if (n>=0){
+<     myproc()->sz += n;
+<   }
+<   else{
+<     growproc(n);
+<   }
+<   
+---
+>   if(growproc(n) < 0)
+>     return -1;
+diff -r xv6/kernel/trap.c xv6-old/kernel/trap.c
+70,75d69
+<   /* CMPT 332 group 17 change */
+<   } else if(r_scause() == 13 || r_scause() == 15){
+<     if (lazyalloc(p->pagetable, p->sz, r_stval()) != 0) {
+<         // printf("lazy allocation failed\n");
+<         p->killed = 1;
+<       } 
+diff -r xv6/kernel/vm.c xv6-old/kernel/vm.c
+149,151c149
+<     /* CMPT 332 group 17 change */
+<       // panic("remap");
+<       return -1;
+---
+>       panic("remap");
+167d164
+<   /* CMPT 332 group 17 change */
+176,177c173
+<       // panic("uvmunmap: walk");
+<       continue;
+---
+>       panic("uvmunmap: walk");
+179,180c175
+<       // panic("uvmunmap: not mapped");
+<       continue;
+---
+>       panic("uvmunmap: not mapped");
+189d183
+< 
+192d185
+< 
+311c304
+< /* CMPT 332 group 17 change */
+---
+> 
+314,315c307
+<       continue;
+<       //panic("uvmcopy: pte should exist");
+---
+>       panic("uvmcopy: pte should exist");
+317,318c309
+<       continue;
+<       // panic("uvmcopy: page not present");
+---
+>       panic("uvmcopy: page not present");
+468,521d458
+< }
+< 
+< /* CMPT 332 group 17 change */
+< void
+< vmprint(pagetable_t pagetable)
+< {
+<   static int level = 0;
+<   if (level == 0)
+<   {
+<     printf("page table %p\n", pagetable);
+<   }
+< 	
+<   for(int i = 0; i < 512; i++){
+<     pte_t pte = pagetable[i];
+< 	
+<     if(pte & PTE_V){
+<       for(int j = 0; j <= level; j++){
+<         printf(" ..");
+<       }
+<       printf("%d: pte %p pa %p\n", i, pte, PTE2PA(pte));
+<     }
+<     if((pte & PTE_V) && (pte & (PTE_R|PTE_W|PTE_X)) == 0){
+<       // this PTE points to a lower-level page table.
+<       level ++;
+<       uint64 child = PTE2PA(pte);
+<       vmprint((pagetable_t)child);
+<       level --;
+<     }
+<   }
+< }
+< 
+< /* CMPT 332 group 17 change */
+< int
+< lazyalloc(pagetable_t pagetable, uint64 tablesz, uint64 faultva)
+< {
+<   char *mem;
+<   uint64 round_va;
+< 
+<   if(tablesz <= faultva)
+<     return -1;
+< 
+<   round_va = PGROUNDDOWN(faultva);
+<   
+<   mem = kalloc();
+<   if(mem == 0){
+<     return -1;
+<   }
+<   memset(mem, 0, PGSIZE);
+<   if(mappages(pagetable, round_va, PGSIZE, (uint64)mem, PTE_W|PTE_X|PTE_R|PTE_U) != 0){
+<     kfree(mem);
+<     return -1;
+<   }
+<   
+<   return 0;
+diff -r xv6/Makefile xv6-old/Makefile
+137,139d136
+< 	$U/_symlinktest\
+< 	$U/_bigfile\
+< 	$U/_lazytests\
+170c167
+< CPUS := 1
+---
+> CPUS := 3
+Only in xv6: mkfs
+diff -r xv6/user/user.h xv6-old/user/user.h
+26,27d25
+< /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< int symlink(const char*, const char *);
+diff -r xv6/user/usys.pl xv6-old/user/usys.pl
+39,40d38
+< # /* CMPT 332 GROUP 17 Change, Fall 2020 */
+< entry("symlink");

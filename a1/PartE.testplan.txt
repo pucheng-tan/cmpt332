@@ -1,0 +1,35 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+The implementation of partE is not albe to handle pipeline,
+so no pipeline operation will be tested.
+
+Call ./partE, the shell program starts.
+
+Test 'enter' first, the program should keep prompt pwd and ask for input.
+
+Test cd, both absolute path and relative path.
+For example:
+cd test
+cd ..
+cd ~
+cd ~/CMPT332
+
+Test linux command execution.
+For example:
+ls
+touch test
+rm test
+make
+make clean
+
+Test for wrong input.
+Random string like: asdfg
+
+Test for quit/exit.
+

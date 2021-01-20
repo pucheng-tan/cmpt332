@@ -1,0 +1,94 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+------------------------------------------------------------------------------
+
+in syscall.c, we add extern uint64 sys_nice(void); 
+and we add [SYS_nice] sys_nice, in static uint64 (*syscalls[])(void)
+
+------------------------------------------------------------------------------
+
+in syscall.h, we add #define #define SYS_nice 22
+
+------------------------------------------------------------------------------
+
+in sysproc.c, we add:
+uint64
+sys_nice(void)
+{
+  uint64 incr;
+  argaddr(0,&incr);
+  return nice(incr);
+}
+
+------------------------------------------------------------------------------
+
+in user.h, we add int nice(int incr);
+
+------------------------------------------------------------------------------
+
+in usys.pl, we add entry("nice");
+
+------------------------------------------------------------------------------
+
+in defs.h, we add int nice(int incr);
+
+------------------------------------------------------------------------------
+
+in proc.h, we give the structure proc a new component: int priority;
+
+------------------------------------------------------------------------------
+
+in nice.c, we have the main() function which will take the argument from
+the command line and call the nice() function to change the priority of
+the process
+
+------------------------------------------------------------------------------
+
+in proc.c, we create the following structures:
+
+struct node{
+  struct proc *p;
+  struct node* next;
+  struct node* prev;
+};
+  The node will contains a single process
+
+struct queue{
+  int capacity;
+  int size;
+  struct node* first;
+  struct node* last;
+};
+  The queue will be created for each priority level
+
+struct queue* Q[20];
+  This will create a queue for each priority level
+
+we also add the following functions:
+
+int nice(int incr): increase the priority of the current process by incr levels
+
+int get_priority(int pid): get the priority of the process with pid
+
+queue_push(struct queue* q, struct proc *p): push a process to the back of a 
+queue
+
+struct proc* queue_pop(struct queue* q): pop a process from the top of a queue
+
+int queue_isempty(struct queue* q): return 1 if a queue is empty; return 0 if 
+a queue is not empty
+
+We also modified the function void scheduler(void), so that it will find the 
+first process in the queue with highest priority and run. If a priority queue
+is empty, it will skip that level and jump to the next level.
+
+We met problem with modifying this function so we did not finish the 
+modification.
+
+------------------------------------------------------------------------------

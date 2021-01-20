@@ -1,0 +1,31 @@
+/* 
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+*/
+
+$ ./testa
+Thread create success
+Test ends
+scause 0x000000000000000d
+sepc=0x000000008000105e stval=0x0404040404040ff8
+panic: kerneltrap
+
+$ ./testa
+Thread create success
+Test ends
+panic: wakeup1
+
+$ ./testa
+Thread create success
+Test ends
+$ 
+
+With exactly same codes, the xv6 has different results.
+The thread_create() passes the test.
+The original exit() doesn't work sometimes.
+We couldn't complete the test for the rest functions.

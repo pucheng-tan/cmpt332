@@ -1,0 +1,50 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+------------------------------Purpose------------------------------
+The objective of this project is to develop a monitor with IPC
+
+Files contained:
+
+Monitor.h
+Monitor.c
+reader-writer-monitor.h
+reader-writer-monitor.c (given file)
+reader-writer.c (given file)
+list.h (from assignment1)
+list_adders.c (from assignment1)
+list_movers.c (from assignment1)
+list_removers.c (from assignment1)
+
+------------------------------Description------------------------------
+We declared the following queues:
+LIST* enterQ
+    - The queue which contains the processes which are going to enter the monitor
+LIST* urgentQ
+    - The urgent queue
+LIST* cvQ[TOTAL_CVS];
+    - The array of lists. Each queue is used by each conditional variable
+
+------------------------------Procedures------------------------------
+    MonInit()
+We initialize the queues by ListCreate()
+
+    MonEnter()
+To be called before a process going to enter the monitor
+
+    MonLeave()
+To be called before a process going to leave the monitor
+
+    MonServer()
+The IPC server
+
+    MonWait()
+Blocks an executing process and push it into the conditional variable
+
+    MonSignal()
+Reactivates the blocked process in the head of the conditional variable

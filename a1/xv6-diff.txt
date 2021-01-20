@@ -1,0 +1,58 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+diff -r ../xv6/kernel/defs.h xv6/kernel/defs.h
+106a107
+> int             test_numprocs(void);
+diff -r ../xv6/kernel/proc.c xv6/kernel/proc.c
+686a687,703
+> 
+> int
+> test_numprocs(void)
+> {
+>   struct proc *p;
+>   int count = 0;
+> 
+>   for(p = proc; p < &proc[NPROC]; p++)
+>   {
+>     acquire(&p->lock);
+>     if(p->state == RUNNABLE)
+>       count++;
+>     release(&p->lock);
+>   }
+> 
+>   return count;
+> }
+diff -r ../xv6/kernel/syscall.c xv6/kernel/syscall.c
+106a107
+> extern uint64 sys_test_numprocs(void);
+129a131
+> [SYS_test_numprocs]   sys_test_numprocs,
+diff -r ../xv6/kernel/syscall.h xv6/kernel/syscall.h
+22a23
+> #define SYS_test_numprocs 22
+diff -r ../xv6/kernel/sysproc.c xv6/kernel/sysproc.c
+97a98,103
+> 
+> uint64
+> sys_test_numprocs(void)
+> {
+> 	return test_numprocs();
+> }
+diff -r ../xv6/Makefile xv6/Makefile
+134a135
+> 	$U/_test_numprocs\
+Only in xv6: mkfs
+Only in xv6: proc.c
+Only in xv6/user: test_numprocs.c
+diff -r ../xv6/user/user.h xv6/user/user.h
+25a26
+> int test_numprocs(void);
+diff -r ../xv6/user/usys.pl xv6/user/usys.pl
+38a39
+> entry("test_numprocs");

@@ -1,0 +1,82 @@
+#  Name: Ruiqi Gao
+#  NSID: rug276
+#  Student#: 11199909
+
+#  Name: Pucheng Tan
+#  NSID: put178
+#  Student#: 11273627
+
+
+The partA of assignment 1 has 3 phases in total (A1 and A2 are mandatory).
+
+#PartA1:
+
+Library: UBC Pthreads
+
+Command line parameters:
+	numThreads - the number of children threads
+	deadline - the time that parent keep sleeping (wakes up)
+	numSquares - the maximum integer to calculate square of
+
+Usage:
+	./partA1 numThreads deadline numSquares
+
+Files:
+	square.c - c file for Square() function
+	square.h - header file for dependencies of Square() function
+	partA1.c - main c file, reads arguments and create threads,
+	 calls Square() in children threads
+
+Procedures:
+	Global:
+		Initial int numThreads, deadline, numSquares.
+		Struct threadStat, consists of threadId,
+			bool completed (store if the thread finished computation),
+			double timeElapsed (time for thread execution)
+		Initial an array of struct threadStats, indexed by pid.
+		Initial an int pointer countCall, to store recursive calls for each child thread.
+		So the parent and children all have accesses to them.
+	checkNumber():
+		Check if argument is a number.
+	getID();
+		Pass index of child thread to Square().
+	Square(): - in square.c
+		Calculate n^2 recursively.
+		Add recursive call number to countCall externally.
+	mainp():
+		Read 3 arguments numThreads, deadline, numSquares from command-line.
+		Use checkNumber() to check arguments, if true:
+			Assign 3 arguments to global values: numThreads, deadline and numSquares.
+		Malloc countCall, and initial all the call numbers to 0.
+		Malloc threadStats with numThreads x struct threadStat space.
+		Create a new parent using these values.
+	Parent thread:
+		Molloc each threadStat in threadStats in for loop.
+		Create numThreads of child threads in for loop.
+		For each child create call, pass the numSquares to the void pointer.
+		After creating all the children, call Sleep(deadline).
+		When parent wakes up, kill all the children,
+			print incompleted children statistics: number of calls, time elapsed.
+	Child threads:
+		Dereference the void pointer, get the numSquares.
+		Call Square(i) in for loop in range [0, numSquares].
+		Compare result with numSquares^2, if true:
+			set completed to true.
+		Calculate time elapsed, assignment to threadStats[id].
+
+		
+	
+
+#PartA2:
+
+Library: Posix threads.
+
+Produreces:
+	The logic is most likely the same with using UBC Pthreads, just the syntax is different.
+	getID();
+		getId() is different with partA1, need to find pid in threadstats array using for loop.
+		Because the getpid function is different.
+		Posix thread is returning actual process id, not able to be used for index.
+
+
+
